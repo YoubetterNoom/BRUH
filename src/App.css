@@ -1,0 +1,617 @@
+/* 基础设置 */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+/* 动画定义 */
+@keyframes scanline {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100%); }
+}
+
+@keyframes glow {
+  0% { text-shadow: 0 0 5px #0f0; }
+  50% { text-shadow: 0 0 20px #0f0; }
+  100% { text-shadow: 0 0 5px #0f0; }
+}
+
+/* 基础样式 */
+body {
+  background-color: #000;
+  color: #0f0;
+  font-family: 'Press Start 2P', cursive;
+  margin: 0;
+  padding: 0;
+  line-height: 1.6;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* 添加雷达背景 */
+body::before {
+  content: '';
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 200vw;
+  height: 200vw;
+  background: 
+    radial-gradient(circle, transparent 50%, #000 100%),
+    repeating-radial-gradient(
+      circle at center,
+      transparent 0,
+      transparent 20px,
+      rgba(0, 255, 0, 0.03) 21px,
+      rgba(0, 255, 0, 0.03) 21px
+    );
+  transform: translate(-50%, -50%);
+  animation: radar-glow 4s ease-in-out infinite;
+  z-index: -2;
+}
+
+/* 添加雷达扫描线 */
+body::after {
+  content: '';
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 100vw;
+  height: 100vw;
+  background: linear-gradient(
+    90deg,
+    rgba(0, 255, 0, 0.3) 0%,
+    rgba(0, 255, 0, 0.1) 30%,
+    transparent 60%
+  );
+  transform-origin: 0 0;
+  animation: radar-beam 4s linear infinite;
+  z-index: -1;
+}
+
+.App {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  position: relative;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(5px);
+  min-height: 100vh;
+}
+
+/* 标题样式 */
+.App-header {
+  text-align: center;
+  margin-bottom: 40px;
+  position: relative;
+  padding: 20px;
+  border: 2px solid #0f0;
+  background: rgba(0, 255, 0, 0.05);
+}
+
+.App-header h1 {
+  font-size: 24px;
+  margin: 0;
+  padding: 10px 0;
+  color: #0f0;
+  text-shadow: 0 0 10px #0f0;
+  animation: glow 2s ease-in-out infinite;
+}
+
+.App-header .subtitle {
+  font-size: 12px;
+  color: #0f0;
+  opacity: 0.8;
+}
+
+/* 输入框容器 */
+.program-input-container {
+  background: rgba(0, 255, 0, 0.05);
+  border: 2px solid #0f0;
+  padding: 20px;
+  margin: 0 auto 30px;
+  position: relative;
+  width: 90%;
+  max-width: 800px;
+}
+
+.input-wrapper {
+  position: relative;
+  width: 100%;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.input-border {
+  position: absolute;
+  bottom: 9px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, #0f0, #00ff00);
+  transform-origin: left;
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+.program-input:focus + .input-border {
+  transform: scaleX(1);
+}
+
+/* 输入框样式 */
+.program-input {
+  width: 100%;
+  background: #000;
+  border: 1px solid #0f0;
+  color: #0f0;
+  padding: 12px 15px;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 14px;
+  margin-bottom: 10px;
+  height: 45px;
+  letter-spacing: 1px;
+}
+
+.program-input:focus {
+  outline: none;
+  box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+  border-color: #0f0;
+}
+
+/* 输入框提示文本样式 */
+.input-hint {
+  color: #0f0;
+  font-size: 11px;
+  text-align: center;
+  margin-top: 10px;
+  opacity: 0.8;
+}
+
+/* 交易列表样式 */
+.transactions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.transaction-item {
+  background: rgba(0, 255, 0, 0.05);
+  border: 2px solid #0f0;
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* 交易信息样式 */
+.transaction-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  border-bottom: 1px solid #0f0;
+  padding-bottom: 10px;
+}
+
+.timestamp {
+  font-size: 12px;
+  color: #0f0;
+}
+
+.status {
+  font-size: 12px;
+  padding: 5px 10px;
+  border: 1px solid #0f0;
+}
+
+.status.success {
+  color: #0f0;
+  border-color: #0f0;
+}
+
+.status.failed {
+  color: #f00;
+  border-color: #f00;
+}
+
+/* 代币信息样式 */
+.swap-info {
+  margin: 15px 0;
+}
+
+.token-info {
+  background: rgba(0, 255, 0, 0.02);
+  border: 1px solid #0f0;
+  padding: 15px;
+  margin-bottom: 10px;
+}
+
+.token-amount {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.amount {
+  color: #0f0;
+  font-size: 14px;
+}
+
+/* 按钮样式 */
+.refresh-button, .photon-link-button {
+  background: #000;
+  border: 1px solid #0f0;
+  color: #0f0;
+  padding: 10px 20px;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.refresh-button:hover, .photon-link-button:hover {
+  background: #0f0;
+  color: #000;
+}
+
+/* 签名样式 */
+.signature {
+  font-size: 10px;
+  color: #0f0;
+  opacity: 0.7;
+  word-break: break-all;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(0, 255, 0, 0.3);
+}
+
+/* 扫描线效果 */
+.transaction-item::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  background: linear-gradient(
+    transparent 50%,
+    rgba(0, 255, 0, 0.05) 50%
+  );
+  background-size: 100% 4px;
+  animation: scanline 4s linear infinite;
+  pointer-events: none;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .App {
+    padding: 10px;
+  }
+
+  .App-header h1 {
+    font-size: 18px;
+  }
+
+  .App-header .subtitle {
+    font-size: 10px;
+  }
+
+  .transaction-item {
+    padding: 15px;
+  }
+
+  .program-input-container {
+    width: 95%;
+    padding: 15px;
+  }
+
+  .program-input {
+    font-size: 12px;
+    padding: 10px 12px;
+    height: 40px;
+  }
+
+  .input-hint {
+    font-size: 10px;
+  }
+}
+
+/* 监控头部样式 */
+.monitor-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.title-section {
+  flex: 1;
+}
+
+/* 刷新按钮容器 */
+.refresh-container {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* 刷新按钮样式 */
+.refresh-button {
+  background: #000;
+  border: 2px solid #0f0;
+  color: #0f0;
+  padding: 8px 16px;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  position: relative;
+  overflow: hidden;
+}
+
+.refresh-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(0, 255, 0, 0.2),
+    transparent
+  );
+  transition: 0.5s;
+}
+
+.refresh-button:hover::before {
+  left: 100%;
+}
+
+.refresh-button:hover {
+  background: rgba(0, 255, 0, 0.1);
+  box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+}
+
+.refresh-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.refresh-button .loading-spinner {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border: 2px solid rgba(0, 255, 0, 0.3);
+  border-top-color: #0f0;
+  border-radius: 50%;
+  margin-right: 8px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* 添加一个淡入动画 */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.key-auth {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 40px;
+  background: rgba(0, 255, 0, 0.05);
+  border: 2px solid #0f0;
+  border-radius: 12px;
+  box-shadow: 0 0 30px rgba(0, 255, 0, 0.1);
+}
+
+.key-auth h2 {
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 24px;
+  color: #0f0;
+  text-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
+}
+
+.key-auth form {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.key-input {
+  width: 100%;
+  height: 60px;
+  padding: 0 25px;
+  margin: 20px 0;
+  background: #000;
+  border: 2px solid #0f0;
+  color: #0f0;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 18px;
+  letter-spacing: 3px;
+  text-align: center;
+  transition: all 0.3s ease;
+  border-radius: 8px;
+}
+
+.key-input:focus {
+  outline: none;
+  box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+  border-color: #0f0;
+  transform: scale(1.02);
+}
+
+.key-input::placeholder {
+  color: rgba(0, 255, 0, 0.3);
+  font-size: 14px;
+}
+
+.error-message {
+  color: #ff0000;
+  font-size: 14px;
+  margin: 15px 0;
+  text-align: center;
+  text-shadow: 0 0 10px rgba(255, 0, 0, 0.3);
+}
+
+.submit-button {
+  width: 100%;
+  height: 50px;
+  margin-top: 20px;
+  background: #000;
+  border: 2px solid #0f0;
+  color: #0f0;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-radius: 8px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.submit-button:hover:not(:disabled) {
+  background: #0f0;
+  color: #000;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 255, 0, 0.3);
+}
+
+.submit-button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.submit-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  border-color: rgba(0, 255, 0, 0.3);
+}
+
+/* 添加动画效果 */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.key-auth {
+  animation: fadeInUp 0.5s ease-out;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+  .key-auth {
+    max-width: 90%;
+    padding: 30px;
+  }
+
+  .key-auth h2 {
+    font-size: 20px;
+  }
+
+  .key-input {
+    height: 50px;
+    font-size: 16px;
+    padding: 0 15px;
+  }
+
+  .submit-button {
+    height: 45px;
+    font-size: 14px;
+  }
+}
+
+.key-generator {
+  max-width: 500px;
+  margin: 20px auto;
+  padding: 30px;
+  background: rgba(0, 255, 0, 0.05);
+  border: 2px solid #0f0;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.key-generator h2 {
+  margin-bottom: 20px;
+  font-size: 16px;
+  color: #0f0;
+}
+
+.generated-key {
+  width: 100%;
+  padding: 15px;
+  background: #000;
+  border: 2px solid #0f0;
+  color: #0f0;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 14px;
+  text-align: center;
+  letter-spacing: 2px;
+  margin-bottom: 15px;
+}
+
+.copy-button,
+.generate-button {
+  padding: 8px 16px;
+  background: #000;
+  border: 2px solid #0f0;
+  color: #0f0;
+  font-family: 'Press Start 2P', cursive;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.copy-button:hover,
+.generate-button:hover {
+  background: #0f0;
+  color: #000;
+}
+
+/* 雷达扫描动画 */
+@keyframes radar-beam {
+  0% {
+    transform: rotate(0deg);
+    opacity: 0.7;
+  }
+  50% {
+    transform: rotate(180deg);
+    opacity: 0.7;
+  }
+  100% {
+    transform: rotate(360deg);
+    opacity: 0.7;
+  }
+}
+
+@keyframes radar-glow {
+  0% {
+    opacity: 0.2;
+  }
+  50% {
+    opacity: 0.4;
+  }
+  100% {
+    opacity: 0.2;
+  }
+}
+
+/* 添加容器悬停效果 */
+.transaction-item:hover,
+.program-input-container:hover,
+.key-auth:hover {
+  border-color: rgba(0, 255, 0, 0.5);
+  box-shadow: 0 0 30px rgba(0, 255, 0, 0.2);
+} 
