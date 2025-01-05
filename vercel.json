@@ -1,10 +1,7 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "package.json",
-      "use": "@vercel/node",
-      "config": { "maxLambdaSize": "50mb" }
-    }
-  ]
+  "framework": "create-react-app",
+  "buildCommand": "CI=false npm run build",
+  "installCommand": "npm install",
+  "outputDirectory": "build"
 } 
